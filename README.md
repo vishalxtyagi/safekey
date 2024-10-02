@@ -35,28 +35,7 @@ SafeKeyServer/
    Open a Command Prompt with administrative privileges and run:
 
    ```bash
-   python windows_service.py install
-   ```
-
-4. **Start the Service**:
-   You can start the service with:
-
-   ```bash
-   python windows_service.py start
-   ```
-
-5. **Stop the Service**:
-   To stop the service, use:
-
-   ```bash
-   python windows_service.py stop
-   ```
-
-6. **Remove the Service**:
-   To remove the service:
-
-   ```bash
-   python windows_service.py remove
+   python service.py
    ```
 
 ## Usage
