@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 15px 30px;
+            margin: 20px 0;
+            font-size: 1.2em;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:focus {
+            outline: none; /* Remove outline on focus */
+        }
+    </style>
+    <script>
+        const keysToBlock = ['esc', 'f11'];  // Keys to block
+
+        async function blockKeys() {
+            const response = await fetch('http://127.0.0.1:5000/safekey', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ enable: true, keys: keysToBlock }),
+            });
+
+            const result = await response.json();
+            console.log('Blocking keys:', result.message);
+        }
+
+        async function unblockKeys() {
+            const response = await fetch('http://127.0.0.1:5000/safekey', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ enable: false, keys: [] }),  // Unblock all keys
+            });
+
+            const result = await response.json();
+            console.log('Unblocking keys:', result.message);
+        }
+
+        function openFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
+            }
+        }
+
+        function startExam() {
+            openFullscreen();  // Open the page in fullscreen mode
+            blockKeys();      // Block keys when the exam starts
+        }
+
+        window.onbeforeunload = function() {
+            unblockKeys();  // Unblock keys when the user leaves the page
+        };
+    </script>
+</head>
+<body>
+    <div>
+        <h1>Exam Page</h1>
+        <p>Please complete your exam without using the blocked keys (Escape, F11).</p>
+        <button onclick="startExam()">Start Exam</button>
+        <p>Good luck!</p>
+    </div>
+</body>
+</html>

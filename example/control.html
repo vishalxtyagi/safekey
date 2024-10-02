@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Key Server Client</title>
+    <script>
+        async function updateBlocking() {
+            const enableBlocking = document.getElementById('enableBlocking').checked;
+            const keysInput = document.getElementById('keys').value;
+            const keys = keysInput.split(',').map(key => key.trim()).filter(key => key !== '');
+
+            const response = await fetch('http://127.0.0.1:5000/control', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ enable: enableBlocking, keys: keys }),
+            });
+
+            const result = await response.json();
+            const resultDiv = document.getElementById('result');
+
+            if (response.ok) {
+                resultDiv.innerHTML = `<span style="color: green;">Success: ${result.message}</span>`;
+            } else {
+                resultDiv.innerHTML = `<span style="color: red;">Error: ${result.message}</span>`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Safe Key Server Client</h1>
+    <div>
+        <label>
+            <input type="checkbox" id="enableBlocking" checked>
+            Enable Key Blocking
+        </label>
+    </div>
+    <div>
+        <label for="keys">Keys to Block (comma-separated):</label>
+        <input type="text" id="keys" placeholder="e.g., a, b, c">
+    </div>
+    <button onclick="updateBlocking()">Update Blocking</button>
+    <div id="result" style="margin-top: 10px;"></div>
+</body>
+</html>
